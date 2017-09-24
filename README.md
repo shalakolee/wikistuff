@@ -165,3 +165,20 @@ namespace customnamespace
 
 
 ```
+
+## Linking two controls or viewmodels together (good for image controls that zoom at the same point)
+
+```
+        private void ZoomImageViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e, Controls.ZoomImageViewModel Target)
+        {
+            if (!(new string[] {"UserImage", "UserImageSource", "DisplayBackgroundColorPicker","imageWidth","imageHeight" }).Contains(e.PropertyName))
+            {
+                var newValue = ((Controls.ZoomImageViewModel)sender).GetType().GetProperty(e.PropertyName).GetValue(((Controls.ZoomImageViewModel)sender), null);
+                Target.GetType().GetProperty(e.PropertyName).SetValue(Target, newValue);
+            }
+        }
+```
+## Usage:
+```
+            FrontCustomerArtViewModel.PropertyChanged += (sender, e) => ZoomImageViewModel_PropertyChanged(sender, e, FrontPreviewArtViewModel);
+```
